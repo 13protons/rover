@@ -21,8 +21,8 @@ angular.module('Rover', [])
       vm.terrain = TerrainFactory.moveRover(oldPos, newPos, vm.terrain);
     }
   })
-  .factory('RoverFactory', function(){
-    var rover = new Rover();
+  .factory('RoverFactory', function(mapSize){
+    var rover = new Rover(mapSize);
     var factory = {};
     factory.get = function(){return rover;}
     return factory;
@@ -79,7 +79,7 @@ angular.module('Rover', [])
     return factory;
   })
 
-function Rover() {
+function Rover(size) {
   var rover = {
     turn: turn,
     direction: 0,
@@ -99,6 +99,14 @@ function Rover() {
   function move() {
     rover.pos.x += cardinals[dirIndex].x
     rover.pos.y += cardinals[dirIndex].y
+
+    // wrap to world
+    if (rover.pos.x > size -1) {rover.pos.x = 0;}
+    if (rover.pos.y > size -1) {rover.pos.y = 0;}
+
+    if (rover.pos.x < 0) {rover.pos.x = size -1;}
+    if (rover.pos.y < 0) {rover.pos.y = size -1;}
+
     return rover.pos;
   }
   function turn(dir){
