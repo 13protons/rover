@@ -3,6 +3,9 @@
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="index.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   </head>
@@ -21,7 +24,7 @@
         </div>
       </div>
 
-      <div id="comms">
+      <div id="comms" >
         <p>
           <span>Facing {{mission.rover.direction | cardinal}} <br/>
           <button ng-click="mission.rover.turn('l')"><i class="fa fa-reply"></i></button>
@@ -30,6 +33,9 @@
           <button ng-click="mission.rover.turn('r')"><i class="fa fa-share"></i></button>
         <p>
         {{mission.message}}
+        <div ng-if="mission.message == 'bonk'">
+          <img class="img-responsive" src="http://i.giphy.com/pNy4YfgKXN5kI.gif" />
+        </div>
       </div>
 
     </div>
