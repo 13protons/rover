@@ -15,17 +15,21 @@ body, html {
   top: 0px; left: 0px;
   width: 100%;
   height: 100%;
-  background-image: url('http://planetary-science.org/wp-content/uploads/2014/12/Ladon-basin-in-full-color.jpg');
-  background-position: center;
   overflow: auto;
+}
+#terrain {
+  height: 100px;
+  width: 100px;
+  background-image: url('http://planetary-science.org/wp-content/uploads/2014/12/Ladon-basin-in-full-color.jpg');
 }
 
 #comms {
-  width: 15%;
-  position: absolute;
-  top: 0px;
-  left: 0px;
+  width: 200px;
+  position: fixed;
+  top: 32px;
+  right: 32px;
   background-color: #eee;
+  box-shadow: 5px 5px 15px #333;
 }
 
 .terrainRow {
@@ -33,9 +37,10 @@ body, html {
   clear: both;
 }
 .terrainCell {
-  width: 50px; height: 50px;
-  border-left: 1px solid red;
-  border-bottom: 1px solid red;
+  width: 44px; height: 44px;
+  border-left: 1px dashed rgba(255, 0, 0, .4);
+  border-bottom: 1px dashed rgba(255, 0, 0, .4);
+  padding: 3px;
   float: left;
 }
 
@@ -43,6 +48,11 @@ body, html {
   max-width: 100%;
   max-height: 100%;
 }
+
+.rover.facingN { border-top: 2px solid blue;}
+.rover.facingS { border-bottom: 2px solid blue;}
+.rover.facingE { border-right: 2px solid blue;}
+.rover.facingW { border-left: 2px solid blue;}
 
 .terrainCell.obstacle {
   background-image: url(http://www.growtopia.in/images/seeds/seed-info/info/rock-block.png);

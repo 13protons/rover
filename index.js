@@ -1,7 +1,7 @@
 angular.module('Rover', [])
   .config(function($provide){
     //setup world
-    $provide.value('mapSize', 11);
+    $provide.value('mapSize', 25);
 
     $provide.value('map', [
       {
@@ -24,11 +24,16 @@ angular.module('Rover', [])
     console.log(vm.terrain);
     vm.terrain = TerrainFactory.placeRover(vm.rover, vm.terrain);
     vm.attributes = TerrainFactory.cellAttributes;
+    vm.worldSize = TerrainFactory.worldSize;
     vm.moveForward = function(){
+      vm.message = '';
       var oldPos = angular.copy(vm.rover.pos);
-      var newPos = vm.rover.move();
+      var newPos = vm.rover.move(vm.terrain, $scope);
       vm.terrain = TerrainFactory.moveRover(oldPos, newPos, vm.terrain);
     }
+    $scope.$on('bonk', function(){
+      vm.message = 'bonk';
+    })
   })
   .factory('RoverFactory', function(mapSize){
     var rover = new Rover(mapSize);
@@ -46,6 +51,10 @@ angular.module('Rover', [])
         }
         return ''
       }
+    }
+    factory.worldSize = {
+      width: (mapSize * 51) + 'px',
+      height: (mapSize * 51) + 'px'
     }
     factory.moveRover = function(old, current, terrain){
       console.log(old, current)
@@ -65,6 +74,7 @@ angular.module('Rover', [])
     }
     factory.setup = function() {
       var terrain = [];
+
       for(var y=0; y < mapSize; y++){
         row = [];
         for(var x=0; x < mapSize; x++){
@@ -89,7 +99,7 @@ angular.module('Rover', [])
             visible: false,
             rover: false
           }, mapCell);
-          
+
           row[x] = cell;
         }
         terrain[y] = row;
@@ -116,7 +126,9 @@ function Rover(size) {
     {x: 0, y: 1}, /* south */
     {x: -1, y: 0}  /* east */
   ];
-  function move() {
+  function move(terrain, scope) {
+    var currentPos = angular.copy(rover.pos);
+
     rover.pos.x += cardinals[dirIndex].x
     rover.pos.y += cardinals[dirIndex].y
 
@@ -126,6 +138,13 @@ function Rover(size) {
 
     if (rover.pos.x < 0) {rover.pos.x = size -1;}
     if (rover.pos.y < 0) {rover.pos.y = size -1;}
+
+    // test for sollision
+    if (terrain[rover.pos.y][rover.pos.x].obstacle){
+      console.log('bonk');
+      if(scope) { scope.$broadcast('bonk'); }
+      rover.pos = currentPos;
+    }
 
     return rover.pos;
   }

@@ -9,11 +9,13 @@
     <div id="mars" ng-controller="Mission as mission">
 
       <div id="sattelite">
-        <div class="terrainRow" ng-repeat="row in mission.terrain">
-          <div class="terrainCell" ng-repeat="cell in row" ng-class="{'obstacle': cell.obstacle}">
-            <img ng-if="cell.rover"
-                 class="rover"
-                 src="http://mars.nasa.gov/msl/mission/science/results/images/Rover.png" />
+        <div id="terrain" ng-style="mission.worldSize">
+          <div class="terrainRow" ng-repeat="row in mission.terrain">
+            <div class="terrainCell" ng-repeat="cell in row" ng-class="{'obstacle': cell.obstacle}">
+              <img ng-if="cell.rover"
+                   class="rover facing{{mission.rover.direction | cardinal}}"
+                   src="http://www.hotwheels.com/en-ca/Images/Y4712_MARS_tcm859-123794_w230.png" />
+            </div>
           </div>
         </div>
       </div>
@@ -25,6 +27,7 @@
           <button ng-click="mission.rover.turn('r')">Turn Right ></button>
         <p>
         <button ng-click="mission.moveForward()">Move Forward >></button>
+        {{mission.message}}
       </div>
 
     </div>
