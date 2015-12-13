@@ -2,6 +2,14 @@ angular.module('Rover', [])
   .config(function($provide){
     //setup world
     $provide.value('mapSize', 11);
+
+    $provide.value('map', [
+      {
+        pos: {x: 3, y: 7},
+        obstacle: true
+      }
+    ]);
+
   })
   .filter('cardinal', function(){
     var dirs = ['N', 'E', 'S', 'W'];
@@ -13,6 +21,7 @@ angular.module('Rover', [])
     var vm = this;
     vm.rover = RoverFactory.get(); // sync to shared rover instance
     vm.terrain = TerrainFactory.setup();
+    console.log(vm.terrain);
     vm.terrain = TerrainFactory.placeRover(vm.rover, vm.terrain);
     vm.attributes = TerrainFactory.cellAttributes;
     vm.moveForward = function(){
@@ -27,7 +36,7 @@ angular.module('Rover', [])
     factory.get = function(){return rover;}
     return factory;
   })
-  .factory('TerrainFactory', function(mapSize){
+  .factory('TerrainFactory', function(mapSize, map){
     var factory = {};
     factory.cellAttributes = function(cell){
       return mk(cell.obstacle) + 'o,' + mk(cell.rover) + 'r,' + mk(cell.visible) + 'v';
@@ -54,13 +63,23 @@ angular.module('Rover', [])
       terrain[rover.pos.y][rover.pos.x].rover = true;
       return terrain;
     }
-    factory.setup = function(map) {
+    factory.setup = function() {
       var terrain = [];
       for(var y=0; y < mapSize; y++){
         row = [];
         for(var x=0; x < mapSize; x++){
           /* go lookup these values in a map file */
-          var cell = {
+          var mapCell = {};
+
+          angular.forEach(map, function(val, i){
+            if(val.pos.x == x && val.pos.y == y){
+              console.log('found an obstacle')
+              mapCell = val;
+              return false;
+            }
+          });
+
+          var cell = angular.merge({}, {
             pos: {x: x, y: y},
             type: 'e',
             obstacle: false,
@@ -69,7 +88,8 @@ angular.module('Rover', [])
             visited: false,
             visible: false,
             rover: false
-          }
+          }, mapCell);
+          
           row[x] = cell;
         }
         terrain[y] = row;

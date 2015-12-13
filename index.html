@@ -8,21 +8,25 @@
   <body>
     <div id="mars" ng-controller="Mission as mission">
 
-      <div class="terrainRow" ng-repeat="row in mission.terrain">
-        <div class="terrainCell" ng-repeat="cell in row">
-
-          <img ng-if="cell.rover"
-               class="rover"
-               src="http://mars.nasa.gov/msl/mission/science/results/images/Rover.png" />
+      <div id="sattelite">
+        <div class="terrainRow" ng-repeat="row in mission.terrain">
+          <div class="terrainCell" ng-repeat="cell in row" ng-class="{'obstacle': cell.obstacle}">
+            <img ng-if="cell.rover"
+                 class="rover"
+                 src="http://mars.nasa.gov/msl/mission/science/results/images/Rover.png" />
+          </div>
         </div>
       </div>
 
-      <p>
-        <button ng-click="mission.rover.turn('l')">< Turn Left</button>
-        <span>Facing {{mission.rover.direction | cardinal}}
-        <button ng-click="mission.rover.turn('r')">Turn Right ></button>
-      <p>
-      <button ng-click="mission.moveForward()">Move Forward >></button>
+      <div id="comms">
+        <p>
+          <button ng-click="mission.rover.turn('l')">< Turn Left</button>
+          <span>Facing {{mission.rover.direction | cardinal}}
+          <button ng-click="mission.rover.turn('r')">Turn Right ></button>
+        <p>
+        <button ng-click="mission.moveForward()">Move Forward >></button>
+      </div>
+
     </div>
   </body>
 </html>
