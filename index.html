@@ -4,6 +4,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="index.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   </head>
   <body>
     <div id="mars" ng-controller="Mission as mission">
@@ -22,11 +23,12 @@
 
       <div id="comms">
         <p>
-          <button ng-click="mission.rover.turn('l')">< Turn Left</button>
-          <span>Facing {{mission.rover.direction | cardinal}}
-          <button ng-click="mission.rover.turn('r')">Turn Right ></button>
+          <span>Facing {{mission.rover.direction | cardinal}} <br/>
+          <button ng-click="mission.rover.turn('l')"><i class="fa fa-reply"></i></button>
+          <button ng-click="mission.moveForward()"><i class="fa fa-plus"></i></i></button>
+          <button ng-click="mission.moveBackward()"><i class="fa fa-minus"></i></i></button>
+          <button ng-click="mission.rover.turn('r')"><i class="fa fa-share"></i></button>
         <p>
-        <button ng-click="mission.moveForward()">Move Forward >></button>
         {{mission.message}}
       </div>
 

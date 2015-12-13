@@ -27,14 +27,21 @@ angular.module('Rover', [])
     vm.worldSize = TerrainFactory.worldSize;
     vm.moveForward = function(){
       vm.message = '';
-      var updatedTerrain = TerrainFactory.moveRover(vm.terrain, vm.rover);
+      update(TerrainFactory.advanceRover(vm.terrain, vm.rover));
+    }
+    vm.moveBackward = function(){
+      vm.message = '';
+      update(TerrainFactory.retreatRover(vm.terrain, vm.rover));
+    }
+
+    function update(updatedTerrain){
       if (updatedTerrain) {
         vm.terrain = updatedTerrain;
       } else {
         vm.message = 'bonk'
       }
-
     }
+
     $scope.$on('bonk', function(){
       vm.message = 'bonk';
     })
@@ -52,19 +59,27 @@ angular.module('Rover', [])
       width: (mapSize * 51) + 'px',
       height: (mapSize * 51) + 'px'
     }
-    factory.moveRover = function(_terrain, rover){
+    function moveRover(terrain, position, old){
       //console.log(old, current)
-      var terrain = angular.copy(_terrain);
-      var old = angular.copy(rover.pos);
-      var current = rover.move(terrain);
-
-      if (current) {
+      if (position) {
         terrain[old.y][old.x].rover = false;
-        terrain[current.y][current.x].rover = true;
+        terrain[position.y][position.x].rover = true;
         return terrain;
       }
       return false;
+    }
 
+    factory.advanceRover = function(_terrain, rover){
+      var terrain = angular.copy(_terrain);
+      var old = angular.copy(rover.pos);
+      var current = rover.move(terrain);
+      return moveRover(terrain, current, old);
+    }
+    factory.retreatRover = function(_terrain, rover){
+      var terrain = angular.copy(_terrain);
+      var old = angular.copy(rover.pos);
+      var current = rover.move(terrain, true);
+      return moveRover(terrain, current, old);
     }
     factory.placeRover = function(rover, terrain) {
       // this operation is more expensive than simply tracking the rover through its movements
@@ -130,11 +145,17 @@ function Rover(size) {
     {x: 0, y: 1}, /* south */
     {x: -1, y: 0}  /* east */
   ];
-  function move(terrain) {
+  function move(terrain, backward) {
     var currentPos = angular.copy(rover.pos);
 
-    rover.pos.x += cardinals[dirIndex].x
-    rover.pos.y += cardinals[dirIndex].y
+    if (backward) {
+      rover.pos.x += (cardinals[dirIndex].x * -1)
+      rover.pos.y += (cardinals[dirIndex].y * -1)
+    } else {
+      rover.pos.x += cardinals[dirIndex].x
+      rover.pos.y += cardinals[dirIndex].y
+    }
+
 
     // wrap to world
     if (rover.pos.x > size -1) {rover.pos.x = 0;}
