@@ -1,14 +1,22 @@
 angular.module('Rover', [])
   .config(function($provide){
     //setup world
-    $provide.value('mapSize', 25);
+    var mapSize = 25;
+    var obstacles = 10
 
-    $provide.value('map', [
-      {
-        pos: {x: 3, y: 7},
+    // place random obstacles
+    var map = [];
+    for(var i = 0; i < obstacles; i++){
+      map.push({
+        pos: {
+          x: Math.round(Math.random() * mapSize),
+          y: Math.round(Math.random() * mapSize)},
         obstacle: true
-      }
-    ]);
+      })
+    }
+
+    $provide.value('mapSize', mapSize);
+    $provide.value('map', map);
 
   })
   .filter('cardinal', function(){
