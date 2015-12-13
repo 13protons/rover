@@ -27,9 +27,13 @@ angular.module('Rover', [])
     vm.worldSize = TerrainFactory.worldSize;
     vm.moveForward = function(){
       vm.message = '';
-      var oldPos = angular.copy(vm.rover.pos);
-      var newPos = vm.rover.move(vm.terrain, $scope);
-      vm.terrain = TerrainFactory.moveRover(oldPos, newPos, vm.terrain);
+      var updatedTerrain = TerrainFactory.moveRover(vm.terrain, vm.rover);
+      if (updatedTerrain) {
+        vm.terrain = updatedTerrain;
+      } else {
+        vm.message = 'bonk'
+      }
+
     }
     $scope.$on('bonk', function(){
       vm.message = 'bonk';
@@ -43,24 +47,24 @@ angular.module('Rover', [])
   })
   .factory('TerrainFactory', function(mapSize, map){
     var factory = {};
-    factory.cellAttributes = function(cell){
-      return mk(cell.obstacle) + 'o,' + mk(cell.rover) + 'r,' + mk(cell.visible) + 'v';
-      function mk(val){
-        if (!val) {
-          return '-'
-        }
-        return ''
-      }
-    }
+
     factory.worldSize = {
       width: (mapSize * 51) + 'px',
       height: (mapSize * 51) + 'px'
     }
-    factory.moveRover = function(old, current, terrain){
-      console.log(old, current)
-      terrain[old.y][old.x].rover = false;
-      terrain[current.y][current.x].rover = true;
-      return terrain;
+    factory.moveRover = function(_terrain, rover){
+      //console.log(old, current)
+      var terrain = angular.copy(_terrain);
+      var old = angular.copy(rover.pos);
+      var current = rover.move(terrain);
+
+      if (current) {
+        terrain[old.y][old.x].rover = false;
+        terrain[current.y][current.x].rover = true;
+        return terrain;
+      }
+      return false;
+
     }
     factory.placeRover = function(rover, terrain) {
       // this operation is more expensive than simply tracking the rover through its movements
@@ -126,7 +130,7 @@ function Rover(size) {
     {x: 0, y: 1}, /* south */
     {x: -1, y: 0}  /* east */
   ];
-  function move(terrain, scope) {
+  function move(terrain) {
     var currentPos = angular.copy(rover.pos);
 
     rover.pos.x += cardinals[dirIndex].x
@@ -141,9 +145,8 @@ function Rover(size) {
 
     // test for sollision
     if (terrain[rover.pos.y][rover.pos.x].obstacle){
-      console.log('bonk');
-      if(scope) { scope.$broadcast('bonk'); }
       rover.pos = currentPos;
+      return false;
     }
 
     return rover.pos;
