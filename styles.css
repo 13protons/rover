@@ -55,6 +55,6 @@ body, html {
 .rover.facingW { border-left: 2px solid blue;}
 
 .terrainCell.obstacle {
-  background-image: url(http://www.growtopia.in/images/seeds/seed-info/info/rock-block.png);
+  background-image: url('https://img.icons8.com/emoji/256/rock-emoji.png');
   background-size: cover;
 }
